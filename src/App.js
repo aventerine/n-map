@@ -24,7 +24,7 @@ class App extends Component {
     const parameters = {
       client_id: "51WWNTHABB5J114P3QLN1ZHKLY3PIGRHMF5AJSO5MPO42HTC",
       client_secret: "RPZIBZ012VBJI3D1ASIAHLMTHT2N3AWZQV13C12FNSAFDDIM",
-      query: "food",
+      section: "topPicks",
       ll: "41.7356894, -83.54819979999999",
       v: "20180323"
     }
@@ -37,6 +37,7 @@ class App extends Component {
       })
       .catch(error => {
         console.log('ERROR! ' + error)
+        alert('There was an error getting information from Foursquare')
       })
   }
 
@@ -49,17 +50,18 @@ class App extends Component {
     var infowindow = new window.google.maps.InfoWindow
 
     this.state.venues.map(myVenue => {
-      var contentString = `${myVenue.venue.name}`
 
       var marker = new window.google.maps.Marker({
         position: {lat: myVenue.venue.location.lat, 
                    lng: myVenue.venue.location.lng},
         map: map,
-        title: myVenue.venue.name
+        title: myVenue.venue.name,
+        address: myVenue.venue.location.address
       })
 
       marker.addListener('click', function() {
-        infowindow.setContent(contentString)
+        infowindow.setContent('<div>' + marker.title + '<br>' + 
+                              marker.address + '<br>' + '</div>')
         infowindow.open(map, marker);
       })
     })
@@ -70,15 +72,11 @@ class App extends Component {
     return (
       <main>
         <div id="map"></div>
+        <footer>Location information provided by <a href="https://foursquare.com">Foursquare</a></footer>
       </main>
     );
   }
 }
-
-/*
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCN7h8eGQclRO0ZhUL7TGu2upGWa-4YHbo&callback=initMap"
-    async defer></script>
-*/
 
 function loadScript(url){
   var index = window.document.getElementsByTagName('script')[0]
